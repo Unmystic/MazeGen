@@ -82,6 +82,16 @@ class Grid(object):
     def size(self):
         return self.rows * self.cols
     
+    def each_row(self):
+        for row in self.grid:
+            yield row
+    
+    def each_cell(self):
+        for row in self.grid:
+            for cell in row:
+                yield cell
+            
+    
 if __name__ == "__main__":
     
     grid = Grid(4,4)
@@ -89,6 +99,8 @@ if __name__ == "__main__":
     rand_cell = grid.random_cell()
     print([rand_cell.row, rand_cell.col], rand_cell.neighbours())
     print(grid.size())
+    print(list(grid.each_row()))
+    print(list(grid.each_cell()))
                
             
         
