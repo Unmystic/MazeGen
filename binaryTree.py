@@ -19,6 +19,6 @@ class BinaryTree(object):
     
 
 if __name__ == "__main__":
-    grid = Grid(4,4)
+    grid = Grid(8,8)
     tree = BinaryTree()
-    tree.on(grid)
+    print(tree.on(grid))

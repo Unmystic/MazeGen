@@ -50,6 +50,31 @@ class Grid(object):
         self.grid = self.prepare_grid()
         self.configure_cells()
         
+    def __str__(self):
+        output =  "+" + "---+" * self.cols + "\n"
+        for row in self.grid:
+            top = "|"
+            bottom = "+"
+            for cell in row:
+                body = "   "
+                
+                if cell.linked(cell.east):
+                    body += " "
+                else:
+                    body += "|"
+                top += body
+                if cell.linked(cell.south):
+                    bottom += "   +"
+                else:
+                    bottom += "---+"
+            top += "\n"
+            bottom += "\n"
+            output += top
+            output += bottom
+                
+                    
+        return output
+        
     def prepare_grid(self):
         grid = []
         for i in range(self.rows):
@@ -94,7 +119,7 @@ class Grid(object):
     
 if __name__ == "__main__":
     
-    grid = Grid(4,4)
+    grid = Grid(8,8)
     print(grid.grid)
     rand_cell = grid.random_cell()
     print([rand_cell.row, rand_cell.col], rand_cell.neighbours())
