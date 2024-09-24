@@ -1,4 +1,5 @@
 import random
+from PIL import Image, ImageDraw
 
 class Cell(object):
     def __init__(self,row,column):
@@ -115,6 +116,28 @@ class Grid(object):
         for row in self.grid:
             for cell in row:
                 yield cell
+    
+    def to_png(self,cell_size=25):
+        img_width = cell_size * self.cols
+        img_height = cell_size * self.rows
+        
+        img = Image.new("RGB",(img_width+1,img_height+1),(255,255,255))
+        d = ImageDraw.Draw(img)
+        wall = (0,0,0)
+        for cell in self.each_cell():
+            x1 = cell.col * cell_size
+            y1 = cell.row * cell_size
+            x2 = (cell.col +1) * cell_size
+            y2 = (cell.row +1) * cell_size
+            if not cell.north:
+                d.line([x1,y1,x2,y1], fill=wall,width=3)
+            if not cell.west:
+                d.line([x1,y1,x1,y2], fill=wall,width=3)
+            if not cell.linked(cell.east):
+                d.line([x2,y1,x2,y2], fill=wall,width=3)
+            if not cell.linked(cell.south):
+                d.line([x1,y2,x2,y2], fill=wall,width=3)
+        img.save("maze.png","PNG")
             
     
 if __name__ == "__main__":
@@ -126,6 +149,7 @@ if __name__ == "__main__":
     print(grid.size())
     print(list(grid.each_row()))
     print(list(grid.each_cell()))
+    grid.to_png()
                
             
         

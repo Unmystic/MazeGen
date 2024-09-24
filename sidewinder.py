@@ -29,6 +29,7 @@ class Sidewinder(object):
         return grid
     
 if __name__ == "__main__":
-    grid = Grid(10,10)
+    grid = Grid(16,16)
     sdw = Sidewinder()
-    print(sdw.on(grid)) 
+    res = sdw.on(grid)
+    res.to_png()
