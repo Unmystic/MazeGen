@@ -18,7 +18,8 @@ class Sidewinder(object):
                 else:
                     at_northern_border = False
                 
-                should_close_out = at_eastern_border or (not at_northern_border and random.randint(0,2) == 0)
+                should_close_out = (at_eastern_border or
+                (not at_northern_border and random.randint(0,2) == 0))
                 if should_close_out:
                     member = random.choice(run)
                     if member.north:
@@ -29,7 +30,8 @@ class Sidewinder(object):
         return grid
     
 if __name__ == "__main__":
-    grid = Grid(16,16)
+    grid = Grid(16,32)
     sdw = Sidewinder()
     res = sdw.on(grid)
+    print(res)
     res.to_png()

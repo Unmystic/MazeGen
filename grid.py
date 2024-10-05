@@ -1,5 +1,6 @@
 import random
 from PIL import Image, ImageDraw
+from distances import Distances
 
 class Cell(object):
     def __init__(self,row,column):
@@ -21,7 +22,7 @@ class Cell(object):
         if bidir:
             cell.unlink(self,bidir=False)
     
-    # Retieve all connection to current cell
+    # Retrieve all connection to current cell
     def links(self):
         return self.links.keys()
     
@@ -40,8 +41,25 @@ class Cell(object):
             nei.append(self.west)
         if self.east:
             nei.append(self.east)   
-        return nei         
-
+        return nei
+    
+    # Calculate distances to current cell
+    def distances(self):
+        distances = Distances(self)
+        frontier = [self]
+        visited = set()
+        print(self, distances.get_cell_distance(self))
+        visited.add(self)
+        while frontier:
+            new_frontier = []
+            for cell in frontier:
+                for linked in cell.links.keys():
+                    if linked not in visited:
+                        distances.cells[linked] = distances.cells[cell] + 1
+                        new_frontier.append(linked)
+                        visited.add(linked)
+            frontier = new_frontier
+        return distances
 
 
 class Grid(object):
@@ -51,13 +69,16 @@ class Grid(object):
         self.grid = self.prepare_grid()
         self.configure_cells()
         
+    def contents_of(self,cell):
+        return " "
+        
     def __str__(self):
         output =  "+" + "---+" * self.cols + "\n"
         for row in self.grid:
             top = "|"
             bottom = "+"
             for cell in row:
-                body = "   "
+                body = f" {self.contents_of(cell)} "
                 
                 if cell.linked(cell.east):
                     body += " "
@@ -130,26 +151,30 @@ class Grid(object):
             x2 = (cell.col +1) * cell_size
             y2 = (cell.row +1) * cell_size
             if not cell.north:
-                d.line([x1,y1,x2,y1], fill=wall,width=3)
+                d.line([x1,y1,x2,y1], fill=wall,width=2)
             if not cell.west:
-                d.line([x1,y1,x1,y2], fill=wall,width=3)
+                d.line([x1,y1,x1,y2], fill=wall,width=2)
             if not cell.linked(cell.east):
-                d.line([x2,y1,x2,y2], fill=wall,width=3)
+                d.line([x2,y1,x2,y2], fill=wall,width=2)
             if not cell.linked(cell.south):
-                d.line([x1,y2,x2,y2], fill=wall,width=3)
-        img.save("maze.png","PNG")
+                d.line([x1,y2,x2,y2], fill=wall,width=2)
+        img.save("maze_16x32.png","PNG")
             
     
 if __name__ == "__main__":
     
     grid = Grid(8,8)
-    print(grid.grid)
-    rand_cell = grid.random_cell()
-    print([rand_cell.row, rand_cell.col], rand_cell.neighbours())
-    print(grid.size())
-    print(list(grid.each_row()))
-    print(list(grid.each_cell()))
-    grid.to_png()
+    # print(grid.grid)
+    # rand_cell = grid.random_cell()
+    # print([rand_cell.row, rand_cell.col], rand_cell.neighbours())
+    # print(grid.size())
+    # print(list(grid.each_row()))
+    # print(list(grid.each_cell()))
+    # grid.to_png()
+    start = grid.grid[0][0]
+    distances = start.distances()
+    print(grid)
+    
                
             
         
