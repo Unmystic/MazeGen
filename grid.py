@@ -48,7 +48,7 @@ class Cell(object):
         distances = Distances(self)
         frontier = [self]
         visited = set()
-        print(self, distances.get_cell_distance(self))
+        # print(self, distances.get_cell_distance(self))
         visited.add(self)
         while frontier:
             new_frontier = []
@@ -59,7 +59,7 @@ class Cell(object):
                         new_frontier.append(linked)
                         visited.add(linked)
             frontier = new_frontier
-        return distances
+        return distances.cells
 
 
 class Grid(object):
@@ -159,6 +159,26 @@ class Grid(object):
             if not cell.linked(cell.south):
                 d.line([x1,y2,x2,y2], fill=wall,width=2)
         img.save("maze_16x32.png","PNG")
+
+class DistanceGrid(Grid):
+    def __init__(self, rows, columns):
+        super().__init__(rows, columns)
+        self.distances = {}
+    
+    def contents_of(self, cell):
+        # print(self.distances)
+        if self.distances and cell in self.distances:
+            return self.to_base(self.distances[cell],36)
+        else:
+            return " "
+    
+    def to_base(self, number, base):
+        base_string = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        result = ""
+        while number:
+            result += base_string[number % base]
+            number //= base
+        return result[::-1] or "0"     
             
     
 if __name__ == "__main__":
