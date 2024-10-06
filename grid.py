@@ -70,7 +70,7 @@ class Grid(object):
         self.configure_cells()
         
     def contents_of(self,cell):
-        return " "
+        return "   "
         
     def __str__(self):
         output =  "+" + "---+" * self.cols + "\n"
@@ -78,7 +78,7 @@ class Grid(object):
             top = "|"
             bottom = "+"
             for cell in row:
-                body = f" {self.contents_of(cell)} "
+                body = f"{self.contents_of(cell)}"
                 
                 if cell.linked(cell.east):
                     body += " "
@@ -168,9 +168,19 @@ class DistanceGrid(Grid):
     def contents_of(self, cell):
         # print(self.distances)
         if self.distances and cell in self.distances:
-            return self.to_base(self.distances[cell],36)
+            d = str(self.distances[cell])
+            if len(d) == 1:
+                return " " + d + " "
+            elif len(d) == 2:
+                return " " + d
+            elif len(d) == 3:
+                return d
+            else:
+                return "big"
+                
+            #return self.to_base(self.distances[cell],36)
         else:
-            return " "
+            return "   "
     
     def to_base(self, number, base):
         base_string = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
