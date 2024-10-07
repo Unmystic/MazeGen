@@ -15,6 +15,7 @@ class Distances(object):
     def cells(self):
         return self.cells.keys()
     
+    # Finding shortest path using Dijkstra algo
     def path_to_goal(self, goal):
         current = goal
         
@@ -28,4 +29,17 @@ class Distances(object):
                     current = neighbor
                     break
         return breadcrumbs.cells
+    
+    # Finding a longest path using Dijkstra
+    def max_path(self):
+        max_res = [self.root, 0]
+        for cell, distance in self.cells.items():
+            if distance > max_res[1]:
+                max_res[0] = cell
+                max_res[1] = distance
+        return max_res
+    
+    # TODO more efficient longest path realisation with Depth First Search
+                
+        
                 
