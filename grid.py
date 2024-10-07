@@ -59,7 +59,7 @@ class Cell(object):
                         new_frontier.append(linked)
                         visited.add(linked)
             frontier = new_frontier
-        return distances.cells
+        return distances
 
 
 class Grid(object):
