@@ -137,28 +137,37 @@ class Grid(object):
         for row in self.grid:
             for cell in row:
                 yield cell
+                
+    def background_colour_cell(self, cell):
+        return None
     
-    def to_png(self,cell_size=25):
+    def to_png(self,cell_size=25, fname="maze"):
         img_width = cell_size * self.cols
         img_height = cell_size * self.rows
         
         img = Image.new("RGB",(img_width+1,img_height+1),(255,255,255))
         d = ImageDraw.Draw(img)
         wall = (0,0,0)
-        for cell in self.each_cell():
-            x1 = cell.col * cell_size
-            y1 = cell.row * cell_size
-            x2 = (cell.col +1) * cell_size
-            y2 = (cell.row +1) * cell_size
-            if not cell.north:
-                d.line([x1,y1,x2,y1], fill=wall,width=2)
-            if not cell.west:
-                d.line([x1,y1,x1,y2], fill=wall,width=2)
-            if not cell.linked(cell.east):
-                d.line([x2,y1,x2,y2], fill=wall,width=2)
-            if not cell.linked(cell.south):
-                d.line([x1,y2,x2,y2], fill=wall,width=2)
-        img.save("maze_16x32.png","PNG")
+        for mode in ["background", "walls"]: # Draw background in first cycle, walls with second
+            for cell in self.each_cell():
+                x1 = cell.col * cell_size
+                y1 = cell.row * cell_size
+                x2 = (cell.col +1) * cell_size
+                y2 = (cell.row +1) * cell_size
+                if mode == "background":
+                    colour = self.background_colour_cell(cell)
+                    if colour:
+                        d.rectangle([x1,y1,x2,y2], fill=colour) 
+                else:
+                    if not cell.north:
+                        d.line([x1,y1,x2,y1], fill=wall,width=2)
+                    if not cell.west:
+                        d.line([x1,y1,x1,y2], fill=wall,width=2)
+                    if not cell.linked(cell.east):
+                        d.line([x2,y1,x2,y2], fill=wall,width=2)
+                    if not cell.linked(cell.south):
+                        d.line([x1,y2,x2,y2], fill=wall,width=2)
+        img.save(f"{fname}.png","PNG")
 
 class DistanceGrid(Grid):
     def __init__(self, rows, columns):
@@ -189,18 +198,27 @@ class DistanceGrid(Grid):
             result += base_string[number % base]
             number //= base
         return result[::-1] or "0"     
+
+class ColoredGrid(Grid):
+    
+    def set_distances(self, distances):
+        self.distances = distances.cells
+        self.max_dist = max(self.distances.values())    
+    
+    def background_colour_cell(self, cell):
+        if cell in self.distances: 
+            distance = self.distances[cell]
+            intensity = (self.max_dist - distance) / self.max_dist
+            dark = int(255*intensity)
+            bright = 128 + int(127*intensity)
+            return (dark,bright,dark)
             
+        else: 
+            return None
     
 if __name__ == "__main__":
     
     grid = Grid(8,8)
-    # print(grid.grid)
-    # rand_cell = grid.random_cell()
-    # print([rand_cell.row, rand_cell.col], rand_cell.neighbours())
-    # print(grid.size())
-    # print(list(grid.each_row()))
-    # print(list(grid.each_cell()))
-    # grid.to_png()
     start = grid.grid[0][0]
     distances = start.distances()
     print(grid)
