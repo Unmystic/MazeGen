@@ -1,6 +1,8 @@
 # Implementation of Aldous-Broder algorithm, creating random walks
 import random
 from grid import Grid, ColoredGrid
+import os
+from pathlib import Path
 
 
 class AldousBroder(object):
@@ -17,6 +19,27 @@ class AldousBroder(object):
             cell = neighbor
         
         return grid
+
+def generate_colored_mazes(n=6):
+    if not os.path.exists(os.path.abspath("examples/aldous_broder")):
+        os.makedirs("examples/aldous_broder")
+    
+    path = Path("examples/aldous_broder")
+    
+    for i in range(n):
+        grid = ColoredGrid(25,25)
+        ab = AldousBroder()
+        ab_grid = ab.on(grid)
+        start =ab_grid.grid[ab_grid.rows // 2][ab_grid.cols // 2]
+        
+        ab_grid.set_distances(start.distances())
+        fname = f"colored_maze_{i+1}.png"
+        new_path = os.path.join(path , Path(fname))
+        
+        ab_grid.to_png(cell_size= 15, fname=new_path)
+        print(f"Created image {fname} in directory {path}")
+        
+    
     
 if __name__ == "__main__":
     
@@ -24,4 +47,5 @@ if __name__ == "__main__":
     ab = AldousBroder()
     ab_grid = ab.on(grid)
     
-    ab_grid.to_png(cell_size=20, fname="aldous_broder")
+    ab_grid.to_png(cell_size=20, fname="aldous_broder.png")
+    generate_colored_mazes()

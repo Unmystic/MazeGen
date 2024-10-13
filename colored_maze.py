@@ -11,5 +11,5 @@ if __name__ == "__main__":
     
     s_grid.set_distances(start.distances())
     
-    s_grid.to_png(cell_size= 15, fname="colored_maze")
+    s_grid.to_png(cell_size= 15, fname="colored_maze.png")
     

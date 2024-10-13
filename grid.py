@@ -141,7 +141,7 @@ class Grid(object):
     def background_colour_cell(self, cell):
         return None
     
-    def to_png(self,cell_size=25, fname="maze"):
+    def to_png(self,cell_size=25, fname="maze.png"):
         img_width = cell_size * self.cols
         img_height = cell_size * self.rows
         
@@ -167,7 +167,7 @@ class Grid(object):
                         d.line([x2,y1,x2,y2], fill=wall,width=2)
                     if not cell.linked(cell.south):
                         d.line([x1,y2,x2,y2], fill=wall,width=2)
-        img.save(f"{fname}.png","PNG")
+        img.save(fname,"PNG")
 
 class DistanceGrid(Grid):
     def __init__(self, rows, columns):
