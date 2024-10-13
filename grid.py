@@ -145,7 +145,7 @@ class Grid(object):
         img_width = cell_size * self.cols
         img_height = cell_size * self.rows
         
-        img = Image.new("RGB",(img_width+1,img_height+1),(255,255,255))
+        img = Image.new("RGB",(img_width+2,img_height+2),(255,255,255))
         d = ImageDraw.Draw(img)
         wall = (0,0,0)
         for mode in ["background", "walls"]: # Draw background in first cycle, walls with second

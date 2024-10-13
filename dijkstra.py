@@ -5,7 +5,7 @@ if __name__ == "__main__":
     grid = DistanceGrid(8,8)
     sidew = Sidewinder()
     s_grid = sidew.on(grid)
-    print(s_grid)
+    # print(s_grid)
     start = s_grid.grid[0][0]
     distances = start.distances()
     s_grid.distances = distances.cells
