@@ -85,6 +85,9 @@ if __name__ == "__main__":
     ws = Wilsons()
     ws_grid = ws.on(grid)
     
+    deadends = ws_grid.deadends()
+    print(f"The maze has {len(deadends)} deadends")
+    
     ws_grid.to_png(cell_size=20, fname="wilsons.png")
     print("Created image wilsons.png")
     generate_colored_mazes()
@@ -100,4 +103,4 @@ if __name__ == "__main__":
     combined_image = join_images(image_paths, space_between=10)
 
     # Save the result as a single image
-    combined_image.save("examples/wilsons/combined_image.png")
+    combined_image.save("examples/wilsons/combined_wilsons.png")

@@ -168,6 +168,13 @@ class Grid(object):
                     if not cell.linked(cell.south):
                         d.line([x1,y2,x2,y2], fill=wall,width=2)
         img.save(fname,"PNG")
+    
+    def deadends(self):
+        deadends = []
+        for cell in self.each_cell():
+            if len(cell.links) == 1:
+                deadends.append(cell)
+        return deadends
 
 class DistanceGrid(Grid):
     def __init__(self, rows, columns):

@@ -55,6 +55,10 @@ if __name__ == "__main__":
     grid = Grid(25,25)
     hak = HuntandKill()
     hak_grid = hak.on(grid)
+    
+    deadends = hak_grid.deadends()
+    print(f"The maze has {len(deadends)} deadends")
+    
     hak_grid.to_png(cell_size=20, fname="hunt_and_kill.png")
     print("Created image hunt_and_kill.png")
     generate_colored_mazes()
