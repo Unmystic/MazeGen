@@ -23,7 +23,7 @@ class Cell(object):
             cell.unlink(self,bidir=False)
     
     # Retrieve all connection to current cell
-    def links(self):
+    def linkslist(self):
         return self.links.keys()
     
     # Check if two cells connected
