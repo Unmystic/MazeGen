@@ -4,8 +4,9 @@ from sidewinder import Sidewinder
 from ald_bro import AldousBroder
 from wilsons import Wilsons
 from hunt_and_kill import HuntandKill
+from recursive_backtracker import RecursiveBacktracker
 
-algorithms = [BinaryTree(), Sidewinder(), AldousBroder(), Wilsons(), HuntandKill()]
+algorithms = [BinaryTree(), Sidewinder(), AldousBroder(), Wilsons(), HuntandKill(), RecursiveBacktracker()]
 
 tries = 100
 size = 20
@@ -30,5 +31,5 @@ sorted_averages = sorted(averages,key=averages.get, reverse=True)
 
 for algo in sorted_averages:
     percentage = round((averages[algo] *100) / total_cells)
-    print('{:>14s} : {:>3d}/{:d} ({:d}%)'.format(algo,averages[algo],total_cells,percentage))
+    print('{:>20s} : {:>3d}/{:d} ({:d}%)'.format(algo,averages[algo],total_cells,percentage))
         
