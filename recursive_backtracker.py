@@ -8,8 +8,9 @@ from wilsons import join_images
 
 class RecursiveBacktracker(object):
     
-    def on(self, grid):
-        start_at = grid.random_cell()
+    def on(self, grid, start_at = None):       
+        if start_at is None :
+            start_at = grid.random_cell()
         stack = []
         stack.append(start_at)
         
