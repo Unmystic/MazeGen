@@ -1,6 +1,37 @@
 import random
+from PIL import Image
 
 class Mask(object):
+    
+    def from_txt(file):
+        
+        with open(file,"r") as f:
+            lines = f.readlines()
+            lines = [line.rstrip('\n') for line in lines]
+            rows = len(lines)
+            cols = len(lines[0])
+            
+            mask = Mask(rows,cols)
+            for i in range(rows):
+                for j in range(cols):
+                    if lines[i][j] == "X":
+                        mask.set_switch(i,j,False)
+        return mask
+    
+    def from_png(file):
+        
+        img = Image.open(file)
+        img = img.transpose(method=Image.Transpose.FLIP_LEFT_RIGHT)
+        img = img.transpose(method=Image.Transpose.ROTATE_90)
+        mask = Mask(img.height, img.width)
+        for i in range(img.height):
+            for j in range(img.width):
+                if img.getpixel((i, j)) == (0,0,0,255):
+                    mask.set_switch(i,j,False)
+        return mask
+        
+
+    
     def __init__(self, rows, columns):
         self.rows = rows
         self.columns = columns
@@ -36,6 +67,8 @@ class Mask(object):
             
             if self.bits[row][col]:
                 return [row,col]
+    
+
                 
     
 if __name__ == "__main__":

@@ -256,7 +256,7 @@ class MaskedGrid(Grid):
                 else:
                     row_list.append(None)
             grid.append(row_list)
-        print(grid)
+        #print(grid)
         return grid
     
     def configure_cells(self):
