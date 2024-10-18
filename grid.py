@@ -80,12 +80,12 @@ class Grid(object):
             for cell in row:
                 body = f"{self.contents_of(cell)}"
                 
-                if cell.linked(cell.east):
+                if cell and cell.linked(cell.east):
                     body += " "
                 else:
                     body += "|"
                 top += body
-                if cell.linked(cell.south):
+                if cell and cell.linked(cell.south):
                     bottom += "   +"
                 else:
                     bottom += "---+"
@@ -108,17 +108,30 @@ class Grid(object):
         return grid
     
     def configure_cells(self):
-        for i in range(self.rows):
-            for j in range(self.cols):
-                cell = self.grid[i][j]                             
-                if i - 1 >= 0:
-                    cell.north = self.grid[i-1][j]
-                if j - 1 >= 0:
-                    cell.west = self.grid[i][j-1]
-                if i + 1 < self.rows:
-                    cell.south = self.grid[i+1][j]
-                if j + 1 < self.cols:
-                    cell.east = self.grid[i][j+1]     
+        for cell in self.each_cell():
+            row, col = cell.row, cell.col
+            
+            if row - 1 >= 0:
+                cell.north = self.grid[row-1][col]
+            if col - 1 >= 0:
+                cell.west = self.grid[row][col-1]
+            if row + 1 < self.rows:
+                cell.south = self.grid[row+1][col]
+            if col + 1 < self.cols:
+                cell.east = self.grid[row][col+1]            
+            
+        # Previous implementation(delete)
+        # for i in range(self.rows):
+        #     for j in range(self.cols):
+        #         cell = self.grid[i][j]                             
+        #         if i - 1 >= 0:
+        #             cell.north = self.grid[i-1][j]
+        #         if j - 1 >= 0:
+        #             cell.west = self.grid[i][j-1]
+        #         if i + 1 < self.rows:
+        #             cell.south = self.grid[i+1][j]
+        #         if j + 1 < self.cols:
+        #             cell.east = self.grid[i][j+1]     
     
     def random_cell(self):
         
@@ -222,6 +235,84 @@ class ColoredGrid(Grid):
             
         else: 
             return None
+        
+class MaskedGrid(Grid):
+    
+    def __init__(self, mask):
+        self.mask = mask
+        self.rows = mask.rows
+        self.cols = mask.columns
+        super().__init__(mask.rows, mask.columns)
+    
+        
+    def prepare_grid(self):
+        grid = []
+        for i in range(self.rows):
+            row_list = []
+            for j in range(self.cols):
+                if self.mask.bits[i][j]:
+                    Cell(i,j)
+                    row_list.append(Cell(i,j))
+                else:
+                    row_list.append(None)
+            grid.append(row_list)
+        print(grid)
+        return grid
+    
+    def configure_cells(self):
+        for cell in self.each_cell():
+            if cell:
+                row, col = cell.row, cell.col
+                
+                if row - 1 >= 0 and self.mask.bits[row-1][col]:
+                    cell.north = self.grid[row-1][col]
+                if col - 1 >= 0 and self.mask.bits[row][col-1]:
+                    cell.west = self.grid[row][col-1]
+                if row + 1 < len(self.grid) and self.mask.bits[row+1][col]:
+                    cell.south = self.grid[row+1][col]
+                if col + 1 < len(self.grid[row]) and self.mask.bits[row][col+1]:
+                    cell.east = self.grid[row][col+1]      
+    
+    def background_colour_cell(self, cell):
+        return (255,255,255,255)
+    
+    def to_png(self,cell_size=25, fname="maze.png"):
+        img_width = cell_size * self.cols
+        img_height = cell_size * self.rows
+        
+        img = Image.new("RGBA",(img_width+2,img_height+2),(255,255,255,0))
+        d = ImageDraw.Draw(img)
+        wall = (0,0,0,255)
+        for mode in ["background", "walls"]: # Draw background in first cycle, walls with second
+            for cell in self.each_cell():
+                if cell:
+                    x1 = cell.col * cell_size
+                    y1 = cell.row * cell_size
+                    x2 = (cell.col +1) * cell_size
+                    y2 = (cell.row +1) * cell_size
+                    if mode == "background":
+                        colour = self.background_colour_cell(cell)
+                        if colour:
+                            d.rectangle([x1,y1,x2,y2], fill=colour) 
+                    else:
+                        if not cell.north:
+                            d.line([x1,y1,x2,y1], fill=wall,width=2)
+                        if not cell.west:
+                            d.line([x1,y1,x1,y2], fill=wall,width=2)
+                        if not cell.linked(cell.east):
+                            d.line([x2,y1,x2,y2], fill=wall,width=2)
+                        if not cell.linked(cell.south):
+                            d.line([x1,y2,x2,y2], fill=wall,width=2)
+        img.save(fname,"PNG")
+    
+    def random_cell(self):
+        row, col = self.mask.random_location()
+        
+        return self.grid[row][col]
+    
+    def size(self):
+        return self.mask.count()
+        
     
 if __name__ == "__main__":
     
