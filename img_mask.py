@@ -13,7 +13,7 @@ if __name__ == "__main__":
         rback = RecursiveBacktracker()
         rback.on(grid)
         
-        grid.to_png(cell_size=15,fname="masked_maze.png")
-        print("Image saved as masked_maze.png")
+        grid.to_png(cell_size=15,fname=f"maze_{sys.argv[1]}")
+        print(f"Image saved as maze_{sys.argv[1]}")
         
         

@@ -13,6 +13,6 @@ if __name__ == "__main__":
     rback = RecursiveBacktracker()
     rback.on(grid)
     
-    grid.to_png(fname="stripped_maze.png")
+    grid.to_png(fname="simple_mask.png")
     
     print(grid)

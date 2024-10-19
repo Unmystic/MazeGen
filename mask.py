@@ -26,7 +26,8 @@ class Mask(object):
         mask = Mask(img.height, img.width)
         for i in range(img.height):
             for j in range(img.width):
-                if img.getpixel((i, j)) == (0,0,0,255):
+                
+                if img.getpixel((i, j)) == (0,0,0,255) or img.getpixel((i, j)) == (0,0,0) :
                     mask.set_switch(i,j,False)
         return mask
         
