@@ -100,18 +100,18 @@ class PolarGrid(Grid):
             dx = center + outer_radius * math.cos(theta_cw)
             dy = center + outer_radius * math.sin(theta_cw)
             
-            if not cell.linked(cell.inward):
-                d.line([ax,ay,cx,cy], fill=wall,width=2)
-            if not cell.linked(cell.cw):
-                d.line([cx,cy,dx,dy], fill=wall,width=2)
+            if not cell.linked(cell.inward) and (ax,ay) != (center,center):
+                d.line([ax,ay,cx,cy], fill=wall,width=4)
+            if not cell.linked(cell.cw) and  (cx,cy) != (center,center):
+                d.line([cx,cy,dx,dy], fill=wall,width=4)
         
-        d.circle((center,center), self.rows * cell_size,outline=wall,width=2)
+        d.circle((center,center), self.rows * cell_size,outline=wall,width=4)
 
         img.save(fname,"PNG")
         
 if __name__ == "__main__":
     
-    grid = PolarGrid(25)
+    grid = PolarGrid(10)
     rback = RecursiveBacktracker()
     rback.on(grid)
     
