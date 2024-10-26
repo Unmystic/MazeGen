@@ -30,9 +30,6 @@ class HexCell(Cell):
     
 class HexGrid(Grid):
     
-    def __init__(self, rows,cols):
-        super().__init__(rows, cols)
-    
     def prepare_grid(self):
         grid = []
         for i in range(self.rows):
