@@ -188,6 +188,24 @@ class Grid(object):
             if len(cell.links) == 1:
                 deadends.append(cell)
         return deadends
+    
+    def braid(self, p = 1.0):
+        
+        if p >1.0 or p < 0 :
+            raise TypeError(" Parameter -p- must be a float between 0 and 1")
+        
+        deadends = self.deadends()
+        random.shuffle(deadends)
+        
+        for cell in deadends:
+            if len(cell.links) != 1 or random.random() > p:
+                next
+                neigbors = [nei for nei in cell.neighbours() if not cell.linked(nei)]              
+                best = [nei for nei in neigbors if len(nei.links) == 1]
+                if not best:
+                    best = neigbors
+                nei = random.choice(best)
+                cell.link(nei)
 
 class DistanceGrid(Grid):
     def __init__(self, rows, columns):
