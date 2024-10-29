@@ -1,4 +1,4 @@
-# Implementation of Recurcive Backtracker algorithm for maze creation
+# Implementation of Recursive Backtracker algorithm for maze creation
 
 import random
 from grid import Grid, ColoredGrid
