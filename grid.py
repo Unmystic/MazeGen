@@ -154,33 +154,88 @@ class Grid(object):
     def background_colour_cell(self, cell):
         return None
     
-    def to_png(self,cell_size=25, fname="maze.png"):
+    def to_png(self,cell_size=25,inset=0, fname="maze.png"):
         img_width = cell_size * self.cols
         img_height = cell_size * self.rows
+        inset = int(cell_size * inset)
         
         img = Image.new("RGB",(img_width+2,img_height+2),(255,255,255))
         d = ImageDraw.Draw(img)
         wall = (0,0,0)
         for mode in ["background", "walls"]: # Draw background in first cycle, walls with second
             for cell in self.each_cell():
-                x1 = cell.col * cell_size
-                y1 = cell.row * cell_size
-                x2 = (cell.col +1) * cell_size
-                y2 = (cell.row +1) * cell_size
-                if mode == "background":
-                    colour = self.background_colour_cell(cell)
-                    if colour:
-                        d.rectangle([x1,y1,x2,y2], fill=colour) 
+                x = cell.col * cell_size
+                y = cell.row * cell_size
+                
+                if inset > 0:
+                    self.to_png_with_inset(img, d, cell, mode,cell_size, wall,x,y,inset)
                 else:
-                    if not cell.north:
-                        d.line([x1,y1,x2,y1], fill=wall,width=2)
-                    if not cell.west:
-                        d.line([x1,y1,x1,y2], fill=wall,width=2)
-                    if not cell.linked(cell.east):
-                        d.line([x2,y1,x2,y2], fill=wall,width=2)
-                    if not cell.linked(cell.south):
-                        d.line([x1,y2,x2,y2], fill=wall,width=2)
+                    self.to_png_without_inset(img, d, cell, mode,cell_size, wall,x,y)
+                
         img.save(fname,"PNG")
+    
+    def to_png_without_inset(self, img, d, cell, mode,cell_size, wall,x,y):
+        x1, y1 = x, y
+        x2 = x1 + cell_size
+        y2 = y1 + cell_size
+        
+        if mode == "background":
+            colour = self.background_colour_cell(cell)
+            if colour:
+                d.rectangle([x1,y1,x2,y2], fill=colour) 
+        else:
+            if not cell.north:
+                d.line([x1,y1,x2,y1], fill=wall,width=2)
+            if not cell.west:
+                d.line([x1,y1,x1,y2], fill=wall,width=2)
+            if not cell.linked(cell.east):
+                d.line([x2,y1,x2,y2], fill=wall,width=2)
+            if not cell.linked(cell.south):
+                d.line([x1,y2,x2,y2], fill=wall,width=2)
+                
+    def cell_coordinates_with_inset(self,x,y,cell_size,inset):
+        x1,x4 = x , x + cell_size
+        x2 = x1 + inset
+        x3 = x4 - inset
+        
+        y1, y4 = y, y + cell_size
+        y2 = y1 + inset
+        y3 = y4 - inset
+        
+        return [x1,x2,x3,x4,y1,y2,y3,y4]
+    
+    def to_png_with_inset(self,img, d, cell, mode,cell_size, wall,x,y,inset):
+        x1,x2,x3,x4,y1,y2,y3,y4 = self.cell_coordinates_with_inset(x,y,cell_size,inset)
+        
+        if mode == "background":
+            pass
+            #TODO
+        else:
+            width = 1
+            if cell.linked(cell.north):
+                d.line([x2,y1,x2,y2], fill=wall,width=width)
+                d.line([x3,y1,x3,y2], fill=wall,width=width)
+            else:
+                d.line([x2,y2,x3,y2], fill=wall,width=width)
+                
+            if cell.linked(cell.south):
+                d.line([x2,y3,x2,y4], fill=wall,width=width)
+                d.line([x3,y3,x3,y4], fill=wall,width=width)
+            else:
+                d.line([x2,y3,x3,y3], fill=wall,width=width)
+                
+            if cell.linked(cell.west):
+                d.line([x1,y2,x2,y2], fill=wall,width=width)
+                d.line([x1,y3,x2,y3], fill=wall,width=width)
+            else:
+                d.line([x2,y2,x2,y3], fill=wall,width=width)
+                
+            if cell.linked(cell.east):
+                d.line([x3,y2,x4,y2], fill=wall,width=width)
+                d.line([x3,y3,x4,y3], fill=wall,width=width)
+            else:
+                d.line([x3,y2,x3,y3], fill=wall,width=width)
+        
     
     def deadends(self):
         deadends = []
