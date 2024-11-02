@@ -255,6 +255,7 @@ class Grid(object):
         for cell in deadends:
             if len(cell.links) != 1 or random.random() > p:
                 next
+            else:
                 neigbors = [nei for nei in cell.neighbours() if not cell.linked(nei)]              
                 best = [nei for nei in neigbors if len(nei.links) == 1]
                 if not best:

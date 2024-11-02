@@ -62,7 +62,7 @@ if __name__ == "__main__":
     
     print(rback_grid)
     
-    rback_grid.to_png(cell_size=20, fname="recursive_backtracker.png")
+    rback_grid.to_png(cell_size=20, fname="braided_recursive_backtracker.png")
     print("Created image recursive_backtracker.png")
     generate_colored_mazes()
 
