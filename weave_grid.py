@@ -114,7 +114,6 @@ class WeaveGrid(Grid):
         for i in range(self.rows):
             row_list = []
             for j in range(self.cols):
-                Cell(i,j)
                 row_list.append(OverCell(i,j,self))
             grid.append(row_list)
         return grid
@@ -135,7 +134,7 @@ class WeaveGrid(Grid):
         return super().to_png(cell_size = cell_size, inset = inset, fname=fname)
     
     def to_png_with_inset(self, img, d, cell, mode, cell_size, wall, x, y, inset):
-        if cell.__class__.__name__ == "OverCell":
+        if cell.__class__.__name__ == "OverCell" or cell.__class__.__name__ == "SimpleOvercell":
             
             super().to_png_with_inset(img, d, cell, mode, cell_size, wall, x, y, inset)
         else:

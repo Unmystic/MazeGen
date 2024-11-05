@@ -3,12 +3,21 @@ from grid import Grid, Cell
 from weave_grid import WeaveGrid
 import random
 from recursive_backtracker import RecursiveBacktracker
+from kruskals import PreconfiguredGrid, Kruskals
 
 
 if __name__ == "__main__":
-    grid = WeaveGrid(20,20)
-    rback = RecursiveBacktracker()
-    rback_grid = rback.on(grid)
+    
+    grid = PreconfiguredGrid(20,20)
+    state = Kruskals.State(grid)
+    
+    for i in range(grid.size()):
+        row = 1 + random.randint(0, grid.rows - 3)
+        col = 1 + random.randint(0, grid.cols - 3)
+        state.add_crossing(grid.grid[row][col])
+    
+    kru = Kruskals()
+    kru_grid = kru.on(grid) 
     
     # deadends = rback_grid.deadends()
     # print(f"The maze has {len(deadends)} deadends")
@@ -18,6 +27,6 @@ if __name__ == "__main__":
     # print(f"The maze has {len(deadends)} deadends")
     
     #print(rback_grid)
-    fname = "weave_maze.png"
-    rback_grid.to_png(cell_size=20,fname=fname, inset=0.1)
+    fname = "weaved_kruskals.png"
+    kru_grid.to_png(cell_size=20,fname=fname, inset=0.2)
     print(f"Created image {fname}")
