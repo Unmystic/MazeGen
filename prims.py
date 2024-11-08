@@ -98,31 +98,31 @@ def generate_colored_mazes(n=6):
     
 if __name__ == "__main__":
     
-    # grid = Grid(20,20)
-    # sprims = SimplifiedPrims()
-    # sprims_grid = sprims.on(grid) 
+    grid = Grid(20,20)
+    sprims = SimplifiedPrims()
+    sprims_grid = sprims.on(grid) 
     
+    deadends = sprims_grid.deadends()
+    print(f"The maze has {len(deadends)} deadends")
+    # sprims_grid.braid(0.3)
     # deadends = sprims_grid.deadends()
     # print(f"The maze has {len(deadends)} deadends")
-    # # sprims_grid.braid(0.3)
-    # # deadends = sprims_grid.deadends()
-    # # print(f"The maze has {len(deadends)} deadends")
     
-    # fname = "simple_prims_maze.png"
-    # sprims_grid.to_png(cell_size=20,fname=fname)
-    # print(f"Created image {fname}")
+    fname = "simple_prims_maze.png"
+    sprims_grid.to_png(cell_size=20,fname=fname)
+    print(f"Created image {fname}")
     
-    # generate_colored_mazes_s()
-    # # Paths to your 6 images (adjust the paths as per your folder)
-    # image_paths = [
-    #     "examples/prims/simplified_prims/colored_maze_1.png", "examples/prims/simplified_prims/colored_maze_2.png",
-    #     "examples/prims/simplified_prims/colored_maze_3.png", "examples/prims/simplified_prims/colored_maze_4.png",
-    #     "examples/prims/simplified_prims/colored_maze_5.png", "examples/prims/simplified_prims/colored_maze_6.png"
-    # ]
-    # # Join the images
-    # combined_image = join_images(image_paths, space_between=10)
-    # # Save the result as a single image
-    # combined_image.save("examples/prims/simplified_prims/combined_s_prims.png")
+    generate_colored_mazes_s()
+    # Paths to your 6 images (adjust the paths as per your folder)
+    image_paths = [
+        "examples/prims/simplified_prims/colored_maze_1.png", "examples/prims/simplified_prims/colored_maze_2.png",
+        "examples/prims/simplified_prims/colored_maze_3.png", "examples/prims/simplified_prims/colored_maze_4.png",
+        "examples/prims/simplified_prims/colored_maze_5.png", "examples/prims/simplified_prims/colored_maze_6.png"
+    ]
+    # Join the images
+    combined_image = join_images(image_paths, space_between=10)
+    # Save the result as a single image
+    combined_image.save("examples/prims/simplified_prims/combined_s_prims.png")
     
     grid = Grid(20,20)
     prims = TruePrims()
@@ -134,7 +134,7 @@ if __name__ == "__main__":
     # deadends = sprims_grid.deadends()
     # print(f"The maze has {len(deadends)} deadends")
     
-    fname = "true_prims_maze.png"
+    fname = "examples/true_prims_maze.png"
     prims_grid.to_png(cell_size=20,fname=fname)
     print(f"Created image {fname}")
     
